@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050914"><meta name="mobile-web-app-capable" content="yes">
+<title>The System</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050914;--panel:rgba(12,28,60,.62);--line:#3d8bff;--glow:rgba(61,139,255,.45);--text:#d6e6ff;--dim:#7f9bc7;--warn:#ff4d5e;--ok:#4dffc3;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#10265a 0,var(--bg) 60%) fixed;color:var(--text);font:15px/1.5 'Exo 2',system-ui,sans-serif}
+h1,h2,.hd{font-family:'Chakra Petch','Trebuchet MS',sans-serif;letter-spacing:.04em;margin:0}
+main{max-width:760px;margin:0 auto;padding:20px 14px 60px;display:grid;gap:18px}
+.win{background:var(--panel);border:1px solid var(--line);box-shadow:0 0 22px var(--glow),inset 0 0 24px rgba(61,139,255,.12);padding:18px;position:relative;backdrop-filter:blur(4px)}
+.win>h2{font-size:15px;text-align:center;border:1px solid var(--line);margin:-32px auto 14px;width:max-content;max-width:90%;padding:3px 18px;background:var(--bg);text-shadow:0 0 8px var(--line)}
+.top{display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:center}
+.lvl{font:700 64px/1 'Chakra Petch',sans-serif;text-shadow:0 0 18px var(--line);text-align:center}
+.lvl small{display:block;font-size:13px;color:var(--dim);font-weight:400}
+.meta div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(61,139,255,.2);padding:3px 0}
+.meta span:first-child{color:var(--dim)}
+.bar{height:10px;border:1px solid var(--line);margin-top:14px;grid-column:1/-1;background:#06122b}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#2a6bff,#7fe0ff);box-shadow:0 0 10px var(--line);transition:width .5s}
+.xpt{grid-column:1/-1;font-size:12px;color:var(--dim);text-align:right}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 28px}
+.st{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(61,139,255,.2)}
+.st b{flex:1;font-family:'Chakra Petch',sans-serif;font-weight:600}
+.st em{font-style:normal;font-size:20px;min-width:34px;text-align:right}
+button{font:600 13px 'Chakra Petch',sans-serif;color:var(--text);background:rgba(61,139,255,.15);border:1px solid var(--line);padding:6px 12px;cursor:pointer;min-height:34px}
+button:hover{background:rgba(61,139,255,.35)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
+button:disabled{opacity:.3;cursor:default}
+.pts{text-align:center;margin-top:12px;color:var(--dim)}.pts b{color:var(--ok)}
+.q{padding:10px 0;border-bottom:1px solid rgba(61,139,255,.2)}
+.q .row{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.q.done .nm{color:var(--ok)}
+.q .btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.q .bar{margin-top:6px;height:6px}
+.q .x{margin-left:auto;border-color:transparent;background:none;color:var(--dim)}
+.tag{font-size:12px;color:var(--dim)}
+.caution{color:var(--warn);font-size:13px;text-align:center;margin-top:14px}
+form{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+input{background:#06122b;border:1px solid var(--line);color:var(--text);padding:6px 10px;font:inherit;min-height:34px}
+input[name=n]{flex:1;min-width:140px}input[name=t]{width:80px}
+.msg{position:fixed;inset:0;background:rgba(2,5,12,.75);display:none;place-items:center;z-index:9;padding:20px}
+.msg.on{display:grid}
+.msg .win{max-width:420px;width:100%;text-align:center}
+.msg.bad .win{border-color:var(--warn);box-shadow:0 0 26px rgba(255,77,94,.5)}
+.msg.bad h2{color:var(--warn);border-color:var(--warn)}
+.msg p{margin:6px 0 16px}
+.streak{text-align:center;color:var(--dim);font-size:13px}
+.rem{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}.rem label{display:flex;gap:8px;align-items:center;color:var(--dim)}
+.h{padding:8px 0;border-bottom:1px solid rgba(61,139,255,.2)}.h .row{display:flex;justify-content:space-between;gap:10px}
+.bg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.bg label{display:grid;gap:3px;font-size:12px;color:var(--dim)}
+.bg input{width:100%}.bg button{align-self:end}
+#bsum{margin-top:14px;display:grid;gap:6px}
+#bsum svg{width:100%;height:64px;border:1px solid rgba(61,139,255,.3)}
+.ok{color:var(--ok)}.no{color:var(--warn)}
+html{-webkit-text-size-adjust:100%}
+button,input{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+input{font-size:16px}
+button{min-height:44px;min-width:44px;font-size:14px}
+@media(max-width:600px){
+ body{font-size:16px}
+ main{padding:28px 10px calc(70px + env(safe-area-inset-bottom,0px));gap:30px}
+ .win{padding:16px 14px}
+ .top{gap:6px 14px}
+ .lvl{font-size:52px}
+ .stats{grid-template-columns:1fr}
+ .st em{font-size:22px}
+ .q .btns button{flex:1}
+ .q .btns .tag{flex-basis:100%}
+ .q .x{min-width:auto;padding:6px 10px}
+ .bg{grid-template-columns:1fr 1fr}
+ .bg button{grid-column:1/-1}
+ form#add input[name=n]{flex-basis:100%}
+ form#add input[name=t]{flex:1}
+ form#add button{flex:1}
+ .rem label{width:100%;justify-content:space-between}
+ .rem button{width:100%}
+ .msg.on{align-items:end;padding:0}
+ .msg .win{max-width:none;border-width:1px 0 0;padding:26px 16px calc(22px + env(safe-area-inset-bottom,0px))}
+ .msg .win button{width:100%}
+}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style></head>
+<body><main>
+<section class="win" aria-label="Status"><h2>STATUS</h2>
+ <div class="top">
+  <div class="lvl" id="lvl">1<small>LEVEL</small></div>
+  <div class="meta">
+   <div><span>Name</span><span id="name"></span></div>
+   <div><span>Job</span><span>Player</span></div>
+   <div><span>Rank</span><span id="rank"></span></div>
+   <div><span>Title</span><span id="title"></span></div>
+   <div><span>Next title</span><span id="nt"></span></div>
+  </div>
+  <div class="bar"><i id="xpb" style="width:0"></i></div><div class="xpt" id="xpt"></div>
+ </div>
+ <div class="stats" id="stats" style="margin-top:14px"></div>
+ <div class="pts">Available points: <b id="pts">0</b></div>
+</section>
+
+<section class="win" aria-label="Quest"><h2>QUEST INFO</h2>
+ <div class="hd" style="text-align:center;font-size:17px">[ DAILY QUEST: STRENGTH TRAINING ]</div>
+ <div class="streak" id="streak"></div>
+ <div id="quests"></div>
+ <form id="add"><input name="n" placeholder="New quest, e.g. Read pages" required maxlength="40"><input name="t" type="number" min="1" value="10" required aria-label="Target"><button>Add quest</button></form>
+ <div class="rem"><label>Remind me at <input id="rt" type="time"></label><button id="nb" type="button">Enable notifications</button><span id="ns" class="tag"></span></div>
+ <div class="caution">CAUTION: Fail to complete the daily quest and a penalty is applied: -50 XP and your streak resets.</div>
+</section>
+<section class="win" aria-label="Body scan"><h2>BODY SCAN</h2>
+ <form id="bf" class="bg">
+  <label>Weight (kg)<input name="w" type="number" step="0.1" min="20" max="300"></label>
+  <label>Height (cm)<input name="h" type="number" min="100" max="250"></label>
+  <label>Sleep (hours)<input name="sl" type="number" step="0.5" min="0" max="24"></label>
+  <label>Water (glasses)<input name="wa" type="number" min="0" max="40"></label>
+  <label>Steps<input name="st" type="number" min="0" max="100000"></label>
+  <label>Resting HR (bpm)<input name="hr" type="number" min="30" max="220"></label>
+  <button>Save today's scan</button>
+ </form>
+ <div id="bsum"></div>
+ <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="hrb" type="button" hidden>Connect heart monitor</button><span id="bpm" class="tag"></span></div>
+ <div class="caution" style="color:var(--dim)">Daily targets: 7+ hours sleep, 8+ glasses water, 8,000+ steps. First scan each day gives +25 XP.</div>
+</section>
+<section class="win" aria-label="Daily record"><h2>DAILY RECORD</h2>
+ <div class="streak" id="hsum"></div>
+ <div id="hist"></div>
+</section>
+<div class="streak"><button id="reset">Reset system</button></div>
+</main>
+
+<div class="msg" id="msg" role="alertdialog" aria-live="assertive"><div class="win"><h2 id="mt">SYSTEM</h2><p id="mb"></p><button id="mok">Accept</button></div></div>
+
+<script>
+const KEY='sys_v1', today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const STATS=[['STR','Strength'],['AGI','Agility'],['VIT','Vitality'],['INT','Intelligence'],['SEN','Sense']];
+const TITLES=[[1,'Unawakened'],[20,'Wolf Slayer'],[40,'Gate Clearer'],[60,'Elite Hunter'],[80,'Shadow Extractor'],[100,'S-Rank Hunter'],[120,'Shadow Commander'],[140,'Shadow Monarch'],[160,'Ruler of Death'],[180,'Sovereign'],[200,'Absolute Being']];
+const RANKS=[[1,'E-Rank'],[10,'D-Rank'],[20,'C-Rank'],[40,'B-Rank'],[60,'A-Rank'],[80,'S-Rank'],[120,'National Level'],[160,'Monarch Class']];
+const fresh=()=>({name:'Player',level:1,xp:0,pts:0,streak:0,date:today(),claimed:false,
+ stats:{STR:10,AGI:10,VIT:10,INT:10,SEN:10},prog:{},
+ quests:[{id:1,n:'Push-ups',t:100,s:'STR'},{id:2,n:'Sit-ups',t:100,s:'VIT'},{id:3,n:'Squats',t:100,s:'AGI'},{id:4,n:'Run (km)',t:10,s:'VIT'}]});
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){S=fresh()}
+const save=()=>{record();plan();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const need=l=>50+10*l;
+const pick=(arr,l)=>arr.filter(a=>a[0]<=l).pop()[1];
+const allDone=()=>S.quests.length>0&&S.quests.every(q=>(S.prog[q.id]||0)>=q.t);
+
+function note(title,body,bad){$('mt').textContent=title;$('mb').textContent=body;$('msg').className='msg on'+(bad?' bad':'')}
+$('mok').onclick=()=>$('msg').className='msg';
+
+function newDay(){
+ if(S.date!==today()){record();
+  if(!S.claimed){S.xp=Math.max(0,S.xp-50);S.streak=0;
+   setTimeout(()=>note('PENALTY','You failed yesterday\'s daily quest. -50 XP. Your streak has reset.',true),300)}
+  S.prog={};S.claimed=false;S.date=today();save()}
+}
+function gain(x){const t0=pick(TITLES,S.level);S.xp+=x;let up=0;
+ while(S.xp>=need(S.level)){S.xp-=need(S.level);S.level++;S.pts+=5;up++}
+ if(up){const t1=pick(TITLES,S.level);note('LEVEL UP','You are now level '+S.level+'. +'+(5*up)+' stat points.'+(t1!==t0?' New title: '+t1+'.':''))}}
+function add(id,n){const q=S.quests.find(q=>q.id===id);
+ const before=allDone();S.prog[id]=Math.min(q.t,(S.prog[id]||0)+n);
+ if(!S.claimed&&allDone()){S.claimed=true;S.streak++;S.stats[q.s]++;
+  const bonus=Math.min(50,S.streak*5);
+  sys('[SYSTEM] Quest complete','Daily quest cleared. +'+(100+bonus)+' XP.');note('QUEST COMPLETE','Daily quest cleared. +'+(100+bonus)+' XP.');gain(100+bonus)}
+ save();draw()}
+
+function draw(){
+ $('name').innerHTML='';const ni=document.createElement('input');ni.value=S.name;ni.maxLength=16;ni.setAttribute('aria-label','Name');
+ ni.style.cssText='width:120px;text-align:right;background:none;border:0;border-bottom:1px solid var(--line)';
+ ni.onchange=()=>{S.name=ni.value||'Player';save()};$('name').append(ni);
+ $('lvl').firstChild.textContent=S.level;
+ $('rank').textContent=pick(RANKS,S.level);
+ $('title').textContent=pick(TITLES,S.level);const nx=TITLES.find(t=>t[0]>S.level);$('nt').textContent=nx?'Level '+nx[0]:'Max';
+ $('xpb').style.width=(100*S.xp/need(S.level))+'%';
+ $('xpt').textContent='XP '+S.xp+' / '+need(S.level);
+ $('pts').textContent=S.pts;
+ $('stats').innerHTML=STATS.map(([k,l])=>`<div class="st"><b title="${l}">${k}</b><em>${S.stats[k]}</em><button data-s="${k}" aria-label="Add point to ${l}" ${S.pts?'':'disabled'}>+</button></div>`).join('');
+ $('streak').textContent=S.streak?'Streak: '+S.streak+' day'+(S.streak>1?'s':''):'No streak yet. Clear every quest today to start one.';
+ $('quests').innerHTML=S.quests.map(q=>{const p=S.prog[q.id]||0,d=p>=q.t;
+  return `<div class="q ${d?'done':''}"><div class="row"><span class="nm">${d?'[✓] ':'[ ] '}${esc(q.n)}</span><span>${p} / ${q.t}</span><button class="x" data-x="${q.id}" aria-label="Remove ${esc(q.n)}">remove</button></div>
+  <div class="bar"><i style="width:${100*p/q.t}%"></i></div>
+  <div class="btns"><button data-a="${q.id}" data-n="1" ${d?'disabled':''}>+1</button><button data-a="${q.id}" data-n="10" ${d?'disabled':''}>+10</button><button data-a="${q.id}" data-n="${q.t}" ${d?'disabled':''}>Done</button><span class="tag">trains ${q.s}</span></div></div>`}).join('')||'<p class="tag" style="text-align:center">No quests. Add one below.</p>';
+}
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.s&&S.pts){S.stats[b.dataset.s]++;S.pts--;save();draw()}
+ else if(b.dataset.a)add(+b.dataset.a,+b.dataset.n);
+ else if(b.dataset.x){S.quests=S.quests.filter(q=>q.id!==+b.dataset.x);save();draw()}
+ else if(b.id==='reset'&&confirm('Erase all progress?')){S=fresh();save();draw()}
+});
+$('add').onsubmit=e=>{e.preventDefault();const f=e.target;
+ S.quests.push({id:Date.now(),n:f.n.value.trim(),t:Math.max(1,+f.t.value),s:'INT'});
+ S.claimed=false;f.reset();f.t.value=10;save();draw()};
+
+S.body=S.body||{height:'',log:{},xpDate:''};
+function drawBody(){
+ const f=$('bf'),L=S.body.log,t=L[today()]||{};
+ f.h.value=S.body.height||'';
+ [['w','w'],['sl','sl'],['wa','wa'],['st','st'],['hr','hr']].forEach(([a,b])=>f[a].value=t[b]??'');
+ const ds=Object.keys(L).filter(d=>L[d].w).sort().slice(-14),ws=ds.map(d=>L[d].w);
+ let h='<div class="tag">No weight logged yet.</div>';
+ if(ws.length){const last=ws[ws.length-1],H=S.body.height/100;
+  h='<div>Latest weight: <b>'+last+' kg</b>'+(H?' | BMI <b>'+(last/(H*H)).toFixed(1)+'</b>':'')+(ws.length>1?' | change <b>'+(last-ws[0]>0?'+':'')+(last-ws[0]).toFixed(1)+' kg</b> over '+ws.length+' entries':'')+'</div>';
+  if(ws.length>1){const mn=Math.min(...ws),mx=Math.max(...ws),r=(mx-mn)||1;
+   h+='<svg viewBox="0 0 300 64" preserveAspectRatio="none" role="img" aria-label="Weight trend"><polyline fill="none" stroke="#7fe0ff" stroke-width="2" points="'+ws.map((v,i)=>(i*300/(ws.length-1)).toFixed(1)+','+(56-48*(v-mn)/r).toFixed(1)).join(' ')+'"/></svg>'}}
+ const chk=(ok,s)=>'<span class="'+(ok?'ok':'no')+'">'+(ok?'[✓] ':'[ ] ')+s+'</span>';
+ h+='<div style="display:flex;gap:16px;flex-wrap:wrap">'+chk(t.sl>=7,'Sleep')+chk(t.wa>=8,'Water')+chk(t.st>=8000,'Steps')+(t.hr?'<span>Resting HR '+t.hr+'</span>':'')+'</div>';
+ $('bsum').innerHTML=h}
+$('bf').onsubmit=e=>{e.preventDefault();const f=e.target,n=k=>f[k].value===''?undefined:+f[k].value;
+ if(n('h'))S.body.height=n('h');
+ S.body.log[today()]={w:n('w'),sl:n('sl'),wa:n('wa'),st:n('st'),hr:n('hr')};
+ if(S.body.xpDate!==today()){S.body.xpDate=today();gain(25);note('BODY SCAN','Scan recorded. +25 XP.')}
+ save();draw();drawBody()};
+if(navigator.bluetooth)$('hrb').hidden=false;
+$('hrb').onclick=async()=>{try{
+ const d=await navigator.bluetooth.requestDevice({filters:[{services:['heart_rate']}]});
+ const sv=await(await d.gatt.connect()).getPrimaryService('heart_rate');
+ const c=await sv.getCharacteristic('heart_rate_measurement');await c.startNotifications();
+ c.addEventListener('characteristicvaluechanged',e=>{const v=e.target.value;$('bpm').textContent='Live: '+((v.getUint8(0)&1)?v.getUint16(1,true):v.getUint8(1))+' bpm'});
+ $('bpm').textContent='Connected, waiting for data'}catch(err){$('bpm').textContent='Could not connect to a heart monitor'}};
+S.hist=S.hist||{};S.remind=S.remind||'20:00';
+function record(){S.hist=S.hist||{};S.hist[S.date]={cleared:!!S.claimed,q:S.quests.map(q=>({n:q.n,p:S.prog[q.id]||0,t:q.t}))}}
+function drawHist(){record();
+ const ds=Object.keys(S.hist).sort().reverse().slice(0,30),cl=ds.filter(d=>S.hist[d].cleared).length;
+ $('hsum').textContent=ds.length?cl+' of '+ds.length+' days cleared | current streak '+S.streak:'No records yet.';
+ $('hist').innerHTML=ds.map(d=>{const r=S.hist[d],t=d===today();
+  const st=r.cleared?'<span class="ok">Cleared</span>':t?'<span class="tag">In progress</span>':'<span class="no">Failed</span>';
+  return '<div class="h"><div class="row"><b>'+d+(t?' (today)':'')+'</b>'+st+'</div><div class="tag">'+r.q.map(x=>esc(x.n)+' '+x.p+'/'+x.t).join(', ')+'</div></div>'}).join('')}
+const d0=draw;draw=()=>{d0();drawHist()};
+var LN=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.LocalNotifications;
+function sys(t,b){try{if(LN){LN.schedule({notifications:[{id:Math.floor(Math.random()*900000)+2000,title:t,body:b,schedule:{at:new Date(Date.now()+400)}}]});return}
+ if('Notification' in window&&Notification.permission==='granted')new Notification(t,{body:b})}catch(e){}}
+var pt;function plan(){if(!LN)return;clearTimeout(pt);pt=setTimeout(async()=>{try{
+ const ids=[];for(let i=0;i<14;i++){ids.push({id:1001+i},{id:1101+i})}
+ await LN.cancel({notifications:ids});
+ const [h,m]=S.remind.split(':').map(Number),now=Date.now(),list=[];
+ for(let i=0;i<14;i++){if(i===0&&S.claimed)continue;
+  const a=new Date();a.setDate(a.getDate()+i);a.setHours(h,m,0,0);
+  if(a.getTime()>now)list.push({id:1001+i,title:'[SYSTEM] Daily quest',body:'Your daily quest is incomplete. Finish it before midnight or take the penalty.',schedule:{at:a,allowWhileIdle:true}});
+  const b=new Date(a);b.setHours(23,0,0,0);
+  if(b.getTime()>now&&b>a)list.push({id:1101+i,title:'[SYSTEM] Final warning',body:'One hour left. Complete your daily quest to avoid the penalty.',schedule:{at:b,allowWhileIdle:true}})}
+ if(list.length)await LN.schedule({notifications:list})}catch(e){}},600)}
+function nstat(){if(LN){LN.checkPermissions().then(r=>{$('ns').textContent=r.display==='granted'?'Notifications on, works when the app is closed':'Not enabled yet'}).catch(()=>{});return}$('ns').textContent=!('Notification' in window)?'Browser notifications unavailable, in-app alerts only':Notification.permission==='granted'?'Notifications on':Notification.permission==='denied'?'Blocked in browser settings, in-app alerts only':'Not enabled yet'}
+$('rt').value=S.remind;$('rt').onchange=()=>{S.remind=$('rt').value||'20:00';S.lastRemind='';save()};
+$('nb').onclick=async()=>{try{if(LN)await LN.requestPermissions();else await Notification.requestPermission()}catch(e){}nstat();plan();sys('[SYSTEM] Notifications enabled','You will be alerted about your daily quest.')};
+function tick(){const d=new Date(),hm=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+ if(S.date!==today()){newDay();draw()}
+ if(!S.claimed&&S.lastRemind!==today()&&hm>=S.remind){S.lastRemind=today();save();
+  const m='Your daily quest is incomplete. Finish it before midnight or take the penalty.';
+  if(!LN)sys('[SYSTEM] Daily quest',m);note('DAILY QUEST',m,true)}}
+newDay();draw();drawBody();nstat();tick();setInterval(tick,30000);plan();
+if(!localStorage.getItem(KEY+'_seen')){try{localStorage.setItem(KEY+'_seen',1)}catch(e){}
+ note('SYSTEM','You have acquired the qualifications to be a Player. Complete your daily quest to grow stronger.')}
+</script></body></html>
